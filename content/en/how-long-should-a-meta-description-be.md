@@ -1,7 +1,9 @@
 ---
 id: meta-description
-title: "How Long Should a Meta Description Be? Length, Examples and Best Practices"
-description: "Meta descriptions have no official length limit, but search results cut them off. Learn the practical range, how to write one, and mistakes worth avoiding."
+title: How Long Should a Meta Description Be? Length, Examples and Best Practices
+description: Meta descriptions have no official length limit, but search results
+  cut them off. Learn the practical range, how to write one, and mistakes worth
+  avoiding.
 category: text
 tool: words
 date: 2026-10-05
