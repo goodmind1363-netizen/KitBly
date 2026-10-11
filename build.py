@@ -160,19 +160,19 @@ await pg.render({canvasContext:cx,viewport:vp}).promise;const bl=await new Promi
 out.addPage([v1.width,v1.height]).drawImage(im,{x:0,y:0,width:v1.width,height:v1.height});cv.width=cv.height=0;pg.cleanup();set(100*i/doc.numPages)}
 const bytes=await out.save({useObjectStreams:true}),blob=new Blob([bytes],{type:"application/pdf"});$("pdSz").textContent=kb(f.size)+" → "+kb(blob.size);ph.textContent="";
 if(blob.size>=f.size){$("pdErr").textContent=MSG.big}else{if(pdUrl)URL.revokeObjectURL(pdUrl);pdUrl=URL.createObjectURL(blob);const a=$("pdDl");a.href=pdUrl;a.download=f.name.replace(/\.pdf$/i,"")+"-compressed.pdf";a.hidden=false}
-}catch(e){$("pdErr").textContent=MSG.err;ph.textContent=""}$("pdGo").disabled=false};'''
+}catch(e){$("pdErr").textContent=MSG.err+" ("+(e&&e.message?e.message:e)+")";ph.textContent=""}$("pdGo").disabled=false};'''
 JS_SPEED='''const up=(set,live,n1)=>new Promise((res,rej)=>{const n=4*1024*1024,x=new XMLHttpRequest(),b=new Blob([new Uint8Array(n)],{type:"text/plain"});let t0=0;x.open("POST","https://speed.cloudflare.com/__up");x.timeout=15000;
 x.upload.onloadstart=()=>t0=performance.now();
 x.upload.onprogress=e=>{const s=(performance.now()-t0)/1000;if(s>0){live.textContent=n1(e.loaded*8/1e6/s);set(60+40*e.loaded/n)}};
 x.upload.onload=()=>res(n*8/1e6/((performance.now()-t0)/1000));x.onerror=x.ontimeout=()=>rej();x.send(b)});
 $("spGo").onclick=async()=>{const n1=v=>nf(v,{maximumFractionDigits:1}),u=Date.now(),bar=$("spBar"),ph=$("spPh"),live=$("spL"),set=p=>{bar.style.width=(100-p)+"%"};
 $("spGo").disabled=true;$("spErr").textContent="";["spP","spD","spU"].forEach(i=>$(i).textContent="–");live.textContent="–";set(0);
-try{ph.textContent=PH[0];let t=performance.now();const p=await fetch("/t/ping.txt?"+u,{cache:"no-store"});if(!p.ok)throw 0;await p.text();const lat=performance.now()-t;$("spP").textContent=n1(lat);live.textContent=n1(lat);set(10);
-ph.textContent=PH[1];t=performance.now();const r=await fetch("/t/payload.bin?"+u,{cache:"no-store"});if(!r.ok)throw 0;const tot=+r.headers.get("content-length")||8388608,rd=r.body.getReader();let got=0;
+try{ph.textContent=PH[0];let t=performance.now();const p=await fetch("/t/ping.txt?"+u,{cache:"no-store"});if(!p.ok)throw new Error("ping.txt HTTP "+p.status);await p.text();const lat=performance.now()-t;$("spP").textContent=n1(lat);live.textContent=n1(lat);set(10);
+ph.textContent=PH[1];t=performance.now();const r=await fetch("/t/payload.bin?"+u,{cache:"no-store"});if(!r.ok)throw new Error("payload.bin HTTP "+r.status);const tot=+r.headers.get("content-length")||8388608,rd=r.body.getReader();let got=0;
 for(;;){const c=await rd.read();if(c.done)break;got+=c.value.length;live.textContent=n1(got*8/1e6/((performance.now()-t)/1000));set(10+50*got/tot)}
 const dl=got*8/1e6/((performance.now()-t)/1000);$("spD").textContent=n1(dl);live.textContent=n1(dl);set(60);
 ph.textContent=PH[2];try{const ul=await up(set,live,n1);$("spU").textContent=n1(ul);live.textContent=n1(ul)}catch(e){$("spU").textContent=NA}
-set(100);ph.textContent=DONE}catch(e){$("spErr").textContent=ERR}$("spGo").disabled=false};'''
+set(100);ph.textContent=DONE}catch(e){$("spErr").textContent=ERR+" ("+(e&&e.message?e.message:e)+")"}$("spGo").disabled=false};'''
 def tool(k,t):
     if k=="pdf":return (f'<section class="tool"><label for="pdF">{t["pdfin"]}</label><input id="pdF" type="file" accept="application/pdf,.pdf"><label for="pdL">{t["lvl"]}</label><select id="pdL" class="in"><option value="light">{t["lv1"]}</option><option value="medium" selected>{t["lv2"]}</option><option value="strong">{t["lv3"]}</option></select><button class="btn" id="pdGo">{t["cmp"]}</button><a class="btn" id="pdDl" hidden>{t["dl"]}</a><div class="pb" aria-hidden="true"><i id="pdBar"></i></div><div id="pdPh" style="margin-top:10px;color:var(--mut);font-size:.9rem" aria-live="polite">&nbsp;</div><p style="color:var(--mut);font-size:.9rem;margin:10px 0 0">{t["pnote"]}</p><p id="pdErr" style="color:var(--mut);font-size:.9rem;margin:8px 0 0"></p><div class="out"><div><span>{t["sz"]}</span><strong id="pdSz">–</strong></div></div></section>','const MSG='+json.dumps({"big":t["pbig"],"err":t["perr"],"page":t["page"]},ensure_ascii=False)+';'+JS_PDF)
     if k=="loan":return (f'<section class="tool"><label for="la">{t["amt"]}</label><input id="la" type="number" inputmode="decimal" value="20000" min="0"><label for="lr">{t["rate"]}</label><input id="lr" type="number" inputmode="decimal" value="5.5" min="0" step="0.1"><label for="ly">{t["term"]}</label><input id="ly" type="number" inputmode="decimal" value="5" min="1"><div class="out"><div><span>{t["mon"]}</span><strong id="lm"></strong></div><div><span>{t["int"]}</span><strong id="li"></strong></div></div></section>',JS_LOAN)
@@ -248,7 +248,7 @@ for k in SLUG:
     if ls:sm+=url(k,ls)
 for a in ART:sm+=url(("a",a),langs_for(("a",a)))
 open(O+"/sitemap.xml","w",encoding="utf-8").write(sm+'</urlset>')
-open(O+"/robots.txt","w").write(f"User-agent: *\nAllow: /\nSitemap: {D}/sitemap.xml\n")
+open(O+"/robots.txt","w").write(f"User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: {D}/sitemap.xml\n")
 os.makedirs(O+"/t",exist_ok=True);open(O+"/t/ping.txt","w").write("ok");open(O+"/t/payload.bin","wb").write(os.urandom(8*1024*1024))
 [shutil.copy(p,O+"/t/") for p in (ROOT/"static"/"t").glob("*")]
 if (ROOT/"static"/"media").is_dir():shutil.copytree(ROOT/"static"/"media",O+"/media")
@@ -256,6 +256,8 @@ open(O+"/ads.txt","w").write("# Add the line from your AdSense account here afte
 open(O+"/_headers","w").write("/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: SAMEORIGIN\n/t/*\n  Cache-Control: no-store\n")
 open(O+"/index.html","w",encoding="utf-8").write('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Kitbly</title><link rel="alternate" hreflang="x-default" href="'+D+'/en/"><script>var l=(navigator.language||"en").slice(0,2);location.replace("/"+(l=="fr"||l=="de"?l:"en")+"/")</script></head><body><p><a href="/en/">English</a> · <a href="/fr/">Français</a> · <a href="/de/">Deutsch</a></p></body></html>')
 open(O+"/404.html","w",encoding="utf-8").write('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>404 – Kitbly</title></head><body style="font-family:system-ui;padding:24px;background:#060A08;color:#E9F6EE"><style>a{color:#2EE57D}</style><h1>404</h1><p><a href="/en/">English</a> · <a href="/fr/">Français</a> · <a href="/de/">Deutsch</a></p></body></html>')
+os.makedirs(O+"/admin",exist_ok=True)
+open(O+"/admin/index.html","w",encoding="utf-8").write('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex"><title>Admin – Kitbly</title><meta http-equiv="refresh" content="3;url=https://app.pagescms.org/"></head><body style="font-family:system-ui;padding:24px;background:#060A08;color:#E9F6EE"><style>a{color:#2EE57D}</style><h1>Kitbly admin</h1><p>Opening the content editor. If nothing happens, <a href="https://app.pagescms.org/">open Pages CMS</a> and choose the KitBly repository.</p></body></html>')
 # checks
 bad=[];fa=re.compile(r'[\u0600-\u06FF]')
 for p,h in pages.items():
