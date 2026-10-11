@@ -23,7 +23,7 @@ a.tool{display:block;text-decoration:none;color:inherit}a.tool:hover{border-colo
 header a.nl{color:var(--ink);font-weight:600;text-decoration:none}header div{display:flex;gap:14px;align-items:center}'''
 css+='''html:root:root:root{--bg:#060A08;--ink:#E9F6EE;--mut:#93AE9C;--card:#0E1712;--line:#1D3025;--blue:#2EE57D;--lime:#2EE57D;--on-blue:#04130A;--on-lime:#04130A;color-scheme:dark}
 body{background:radial-gradient(900px 420px at 12% -8%,rgba(46,229,125,.18),transparent 60%),radial-gradient(700px 380px at 105% 0,rgba(123,44,191,.14),transparent 60%),var(--bg);background-attachment:fixed}
-.tool{transition:transform .2s,box-shadow .2s,border-color .2s}a.tool:hover{border-color:var(--blue);box-shadow:0 10px 30px rgba(46,229,125,.14);transform:translateY(-3px)}
+.tool{transition:transform .2s,box-shadow .2s,border-color .2s}a.tool:hover{border-color:var(--blue);box-shadow:0 10px 30px rgba(46,229,125,.14)}
 .btn{box-shadow:0 0 0 0 rgba(46,229,125,.5)}.btn:hover:not(:disabled){filter:brightness(1.1);box-shadow:0 6px 20px rgba(46,229,125,.3)}
 h2.sec::after{content:"";display:block;width:46px;height:4px;border-radius:4px;background:var(--blue);margin-top:8px}
 .logo b{box-shadow:0 0 18px rgba(46,229,125,.45)}.out strong{color:var(--blue)}
@@ -152,7 +152,7 @@ im.onload=()=>{const c=document.createElement("canvas");c.width=im.width;c.heigh
 c.toBlob(b=>{if(blobUrl)URL.revokeObjectURL(blobUrl);blobUrl=URL.createObjectURL(b);const a=$("imgDl");a.href=blobUrl;a.download=f.name.replace(/\.[^.]+$/,"")+"."+fm.split("/")[1].replace("jpeg","jpg");a.hidden=false;$("imgSz").textContent=(f.size/1024).toFixed(0)+" KB → "+(b.size/1024).toFixed(0)+" KB"},fm,q);URL.revokeObjectURL(im.src)};im.src=URL.createObjectURL(f)};'''
 JS_PDF=r'''let pdUrl;$("pdGo").onclick=async()=>{const f=$("pdF").files[0];if(!f)return;const cfg={light:[2,.85],medium:[1.5,.7],strong:[1,.55]}[$("pdL").value],bar=$("pdBar"),ph=$("pdPh"),set=p=>{bar.style.width=(100-p)+"%"},kb=n=>nf(n/1024,{maximumFractionDigits:0})+" KB";
 $("pdGo").disabled=true;$("pdErr").textContent="";$("pdDl").hidden=true;set(0);
-try{const [pj,pl]=await Promise.all([import("/t/pdf.min.mjs"),import("/t/pdf-lib.esm.min.js")]);pj.GlobalWorkerOptions.workerSrc="/t/pdf.worker.min.mjs";
+try{const [pj,pl]=await Promise.all([import("/assets/pdfjs.js"),import("/assets/pdflib.js")]);pj.GlobalWorkerOptions.workerSrc="/assets/pdfjs-worker.js";
 const doc=await pj.getDocument({data:await f.arrayBuffer()}).promise,out=await pl.PDFDocument.create();
 for(let i=1;i<=doc.numPages;i++){ph.textContent=MSG.page+" "+i+"/"+doc.numPages;const pg=await doc.getPage(i),v1=pg.getViewport({scale:1});let sc=cfg[0];const mx=Math.max(v1.width,v1.height)*sc;if(mx>3000)sc*=3000/mx;
 const vp=pg.getViewport({scale:sc}),cv=document.createElement("canvas");cv.width=Math.ceil(vp.width);cv.height=Math.ceil(vp.height);const cx=cv.getContext("2d");cx.fillStyle="#fff";cx.fillRect(0,0,cv.width,cv.height);
@@ -167,8 +167,8 @@ x.upload.onprogress=e=>{const s=(performance.now()-t0)/1000;if(s>0){live.textCon
 x.upload.onload=()=>res(n*8/1e6/((performance.now()-t0)/1000));x.onerror=x.ontimeout=()=>rej();x.send(b)});
 $("spGo").onclick=async()=>{const n1=v=>nf(v,{maximumFractionDigits:1}),u=Date.now(),bar=$("spBar"),ph=$("spPh"),live=$("spL"),set=p=>{bar.style.width=(100-p)+"%"};
 $("spGo").disabled=true;$("spErr").textContent="";["spP","spD","spU"].forEach(i=>$(i).textContent="–");live.textContent="–";set(0);
-try{ph.textContent=PH[0];let t=performance.now();const p=await fetch("/t/ping.txt?"+u,{cache:"no-store"});if(!p.ok)throw new Error("ping.txt HTTP "+p.status);await p.text();const lat=performance.now()-t;$("spP").textContent=n1(lat);live.textContent=n1(lat);set(10);
-ph.textContent=PH[1];t=performance.now();const r=await fetch("/t/payload.bin?"+u,{cache:"no-store"});if(!r.ok)throw new Error("payload.bin HTTP "+r.status);const tot=+r.headers.get("content-length")||8388608,rd=r.body.getReader();let got=0;
+try{ph.textContent=PH[0];let t=performance.now();const p=await fetch("/assets/probe.txt?"+u,{cache:"no-store"});if(!p.ok)throw new Error("probe HTTP "+p.status);await p.text();const lat=performance.now()-t;$("spP").textContent=n1(lat);live.textContent=n1(lat);set(10);
+ph.textContent=PH[1];t=performance.now();const r=await fetch("/assets/sample.dat?"+u,{cache:"no-store"});if(!r.ok)throw new Error("sample HTTP "+r.status);const tot=+r.headers.get("content-length")||8388608,rd=r.body.getReader();let got=0;
 for(;;){const c=await rd.read();if(c.done)break;got+=c.value.length;live.textContent=n1(got*8/1e6/((performance.now()-t)/1000));set(10+50*got/tot)}
 const dl=got*8/1e6/((performance.now()-t)/1000);$("spD").textContent=n1(dl);live.textContent=n1(dl);set(60);
 ph.textContent=PH[2];try{const ul=await up(set,live,n1);$("spU").textContent=n1(ul);live.textContent=n1(ul)}catch(e){$("spU").textContent=NA}
@@ -249,11 +249,11 @@ for k in SLUG:
 for a in ART:sm+=url(("a",a),langs_for(("a",a)))
 open(O+"/sitemap.xml","w",encoding="utf-8").write(sm+'</urlset>')
 open(O+"/robots.txt","w").write(f"User-agent: *\nAllow: /\nDisallow: /admin/\nSitemap: {D}/sitemap.xml\n")
-os.makedirs(O+"/t",exist_ok=True);open(O+"/t/ping.txt","w").write("ok");open(O+"/t/payload.bin","wb").write(os.urandom(8*1024*1024))
-[shutil.copy(p,O+"/t/") for p in (ROOT/"static"/"t").glob("*")]
+os.makedirs(O+"/assets",exist_ok=True);open(O+"/assets/probe.txt","w").write("ok");open(O+"/assets/sample.dat","wb").write(os.urandom(8*1024*1024))
+[shutil.copy(ROOT/"static"/"t"/a,O+"/assets/"+b) for a,b in {"pdf.min.mjs":"pdfjs.js","pdf.worker.min.mjs":"pdfjs-worker.js","pdf-lib.esm.min.js":"pdflib.js"}.items()]
 if (ROOT/"static"/"media").is_dir():shutil.copytree(ROOT/"static"/"media",O+"/media")
 open(O+"/ads.txt","w").write("# Add the line from your AdSense account here after approval\n")
-open(O+"/_headers","w").write("/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: SAMEORIGIN\n/t/*\n  Cache-Control: no-store\n")
+open(O+"/_headers","w").write("/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: SAMEORIGIN\n/assets/*\n  Cache-Control: no-store\n")
 open(O+"/index.html","w",encoding="utf-8").write('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Kitbly</title><link rel="alternate" hreflang="x-default" href="'+D+'/en/"><script>var l=(navigator.language||"en").slice(0,2);location.replace("/"+(l=="fr"||l=="de"?l:"en")+"/")</script></head><body><p><a href="/en/">English</a> · <a href="/fr/">Français</a> · <a href="/de/">Deutsch</a></p></body></html>')
 open(O+"/404.html","w",encoding="utf-8").write('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>404 – Kitbly</title></head><body style="font-family:system-ui;padding:24px;background:#060A08;color:#E9F6EE"><style>a{color:#2EE57D}</style><h1>404</h1><p><a href="/en/">English</a> · <a href="/fr/">Français</a> · <a href="/de/">Deutsch</a></p></body></html>')
 os.makedirs(O+"/admin",exist_ok=True)
@@ -263,7 +263,7 @@ bad=[];fa=re.compile(r'[\u0600-\u06FF]')
 for p,h in pages.items():
     if fa.search(h):bad.append("persian:"+p)
     for u in re.findall(r'href="(/[^"#]*)"',h):
-        if u not in pages and u not in("/",) and not u.startswith(("/media/","/t/")):bad.append(f"broken:{p}->{u}")
+        if u not in pages and u not in("/",) and not u.startswith(("/media/","/assets/")):bad.append(f"broken:{p}->{u}")
 print(len(pages),"pages;","problems:",bad or "none")
 FIX='<script>nav=function(u){parent.postMessage({go:u},"*")};document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a");if(!a)return;var h=a.getAttribute("href");if(h&&h.charAt(0)==="/"){e.preventDefault();parent.postMessage({go:h},"*")}})</script>'
 P=json.dumps({p:h.replace("</body>",FIX+"</body>") for p,h in pages.items()},ensure_ascii=False).replace("</","<\\/")
