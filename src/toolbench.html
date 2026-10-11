@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kitbly – Free online tools</title>
+<meta name="description" content="Free online calculators and text tools that run in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Instrument+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF2F0;--ink:#10201F;--mut:#4B5E5C;--card:#fff;--line:#CBD6D3;--blue:#2447F5;--lime:#C6F135;--on-blue:#fff;--on-lime:#10201F;--ink2:#10201F;--on-ink:#EEF2F0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0C1514;--ink:#E7EFEC;--mut:#9DB0AC;--card:#142220;--line:#27403C;--blue:#7C93FF;--lime:#C6F135;--on-blue:#0C1514;--ink2:#C6F135;--on-ink:#10201F}}
+:root[data-theme="dark"]{--bg:#0C1514;--ink:#E7EFEC;--mut:#9DB0AC;--card:#142220;--line:#27403C;--blue:#7C93FF;--lime:#C6F135;--on-blue:#0C1514;--ink2:#C6F135;--on-ink:#10201F}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.55 "Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3,.logo{font-family:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;line-height:1.1;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0}
+.logo{font-weight:700;font-size:1.35rem;letter-spacing:-.02em}
+.logo b{background:var(--lime);color:var(--on-lime);padding:0 6px;border-radius:4px;margin-right:2px}
+.lang{font:600 .9rem "Instrument Sans",sans-serif;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 12px;border-radius:999px;cursor:pointer}
+.lang button{font:600 .85rem "Instrument Sans",sans-serif;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 11px;border-radius:999px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+/* slider */
+.slider{position:relative;border-radius:22px;overflow:hidden;margin:6px 0 40px}
+.track{display:flex;transition:transform .6s cubic-bezier(.3,.7,.2,1);touch-action:pan-y}
+.slide{min-width:100%;min-height:290px;padding:30px 26px 64px;display:flex;flex-direction:column;justify-content:center;gap:12px;position:relative;overflow:hidden}
+.slide h2{font-size:clamp(1.9rem,6vw,3.2rem);max-width:12ch;position:relative;z-index:1}
+.slide p{margin:0;max-width:34ch;position:relative;z-index:1;font-size:1.05rem}
+.slide a{align-self:flex-start;margin-top:6px;font-weight:600;text-decoration:none;padding:10px 18px;border-radius:999px;position:relative;z-index:1}
+.s1{background:#E5383B;color:#fff}.s1 a{background:#fff;color:#A4161A}
+.s2{background:#FF9F1C;color:#2B1700}.s2 a{background:#2B1700;color:#FFD08A}
+.s3{background:#1F8A4C;color:#fff}.s3 a{background:#fff;color:#0F5A2F}
+.s4{background:#2447F5;color:#fff}.s4 a{background:#fff;color:#1630B0}.s5{background:#7B2CBF;color:#fff}.s5 a{background:#fff;color:#4D1480}
+.rb{height:6px;border-radius:6px;background:linear-gradient(90deg,#E5383B,#FF9F1C,#FFD60A,#2A9D55,#2447F5,#7B2CBF)}
+.art{position:absolute;right:-10px;bottom:-30px;font:700 12rem/1 "Bricolage Grotesque",sans-serif;opacity:.22;pointer-events:none}
+.bars{position:absolute;right:26px;bottom:0;display:flex;align-items:flex-end;gap:10px;opacity:.28}
+.bars i{display:block;width:34px;background:currentColor;border-radius:6px 6px 0 0}
+.nav{position:absolute;left:26px;right:26px;bottom:18px;display:flex;align-items:center;justify-content:space-between;z-index:2}
+.dots{display:flex;gap:8px}
+.dots button{width:10px;height:10px;border-radius:50%;border:0;background:currentColor;opacity:.35;padding:0;cursor:pointer}
+.dots button[aria-current="true"]{opacity:1;width:28px;border-radius:6px}
+.arrows{display:flex;gap:8px}
+.arrows button{width:38px;height:38px;border-radius:50%;border:2px solid currentColor;background:transparent;color:inherit;font-size:1.1rem;cursor:pointer}
+/* tools */
+h2.sec{font-size:1.7rem;margin:0 0 18px}
+.grid{display:grid;gap:16px;grid-template-columns:1fr}
+@media(min-width:760px){.grid{grid-template-columns:repeat(3,1fr)}}
+.tool{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;scroll-margin-top:16px}
+.tool h3{font-size:1.2rem;margin-bottom:14px}
+label{display:block;font-size:.88rem;color:var(--mut);margin:10px 0 4px}
+input,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px}
+textarea{min-height:130px;resize:vertical}
+.row{display:flex;align-items:center;gap:8px}.row input{min-width:0}.row span{color:var(--mut);white-space:nowrap}
+.out{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);display:grid;gap:8px}
+.out div{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.out span{color:var(--mut);font-size:.9rem}.out strong{font:700 1.35rem "Bricolage Grotesque",sans-serif;text-align:right}
+.btn{font:600 .95rem "Instrument Sans",sans-serif;background:var(--blue);color:var(--on-blue);border:0;border-radius:999px;padding:10px 18px;cursor:pointer;text-decoration:none;display:inline-block;margin:14px 6px 0 0}.btn:disabled{opacity:.5}.btn[hidden]{display:none}
+select.in{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px}
+footer{margin:48px 0 28px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px 22px;justify-content:space-between;color:var(--mut);font-size:.9rem}
+footer nav{display:flex;gap:18px}footer a{color:var(--ink)}
+@media(prefers-reduced-motion:reduce){.track{transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="logo"><b>Kit</b>bly</div>
+<select class="lang" id="lang" aria-label="Language"><option value="en">English</option><option value="fr">Français</option><option value="de">Deutsch</option></select>
+</header>
+
+<div class="rb"></div>
+<section class="slider" aria-roledescription="carousel" aria-label="Featured tools">
+<div class="track" id="track">
+<div class="slide s1"><div class="bars" aria-hidden="true"><i style="height:70px"></i><i style="height:120px"></i><i style="height:170px"></i><i style="height:210px"></i></div>
+<h2 data-t="s1h"></h2><p data-t="s1p"></p><a href="#loan" data-t="open"></a></div>
+<div class="slide s2"><div class="art" aria-hidden="true">%</div>
+<h2 data-t="s2h"></h2><p data-t="s2p"></p><a href="#pct" data-t="open"></a></div>
+<div class="slide s3"><div class="art" aria-hidden="true">Aa</div>
+<h2 data-t="s3h"></h2><p data-t="s3p"></p><a href="#words" data-t="open"></a></div>
+<div class="slide s4"><div class="art" aria-hidden="true" style="font-size:8rem;bottom:-10px">JPG</div>
+<h2 data-t="imgh"></h2><p data-t="s4p"></p><a href="#img" data-t="open"></a></div>
+<div class="slide s5"><div class="art" aria-hidden="true">↓</div>
+<h2 data-t="spd"></h2><p data-t="s5p"></p><a href="#speed" data-t="open"></a></div>
+</div>
+<div class="nav"><div class="dots" id="dots"></div>
+<div class="arrows"><button id="prev" aria-label="Previous">&#8592;</button><button id="next" aria-label="Next">&#8594;</button></div></div>
+</section>
+
+<h2 class="sec" data-t="all"></h2>
+<div class="grid">
+<section class="tool" id="loan"><h3 data-t="s1h"></h3>
+<label for="la" data-t="amt"></label><input id="la" type="number" inputmode="decimal" value="20000" min="0">
+<label for="lr" data-t="rate"></label><input id="lr" type="number" inputmode="decimal" value="5.5" min="0" step="0.1">
+<label for="ly" data-t="term"></label><input id="ly" type="number" inputmode="decimal" value="5" min="1">
+<div class="out"><div><span data-t="mon"></span><strong id="lm"></strong></div><div><span data-t="int"></span><strong id="li"></strong></div></div></section>
+
+<section class="tool" id="pct"><h3 data-t="s2h"></h3>
+<label for="pa" data-t="what"></label>
+<div class="row"><input id="pa" type="number" inputmode="decimal" value="15"><span data-t="of"></span></div>
+<label for="pb">&nbsp;</label><input id="pb" type="number" inputmode="decimal" value="240">
+<div class="out"><div><span data-t="res"></span><strong id="pr"></strong></div></div></section>
+
+<section class="tool" id="words"><h3 data-t="s3h"></h3>
+<label for="wt" data-t="ph"></label><textarea id="wt"></textarea>
+<div class="out"><div><span data-t="w"></span><strong id="ww">0</strong></div><div><span data-t="c"></span><strong id="wc">0</strong></div><div><span data-t="rt"></span><strong id="wr">0</strong></div></div></section>
+
+<section class="tool" id="img"><h3 data-t="imgh"></h3>
+<label for="imgF" data-t="imgin"></label><input id="imgF" type="file" accept="image/*">
+<label for="imgFmt" data-t="fmt"></label><select id="imgFmt" class="in"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select>
+<label for="imgQ" data-t="qual"></label><input id="imgQ" type="range" min="40" max="100" value="85">
+<button class="btn" id="imgGo" data-t="conv"></button><a class="btn" id="imgDl" hidden data-t="dl"></a>
+<div class="out"><div><span data-t="sz"></span><strong id="imgSz">–</strong></div></div></section>
+
+<section class="tool" id="speed"><h3 data-t="spd"></h3>
+<button class="btn" id="spGo" data-t="go"></button><p id="spErr" style="color:var(--mut);font-size:.9rem"></p>
+<div class="out"><div><span data-t="dlm"></span><strong id="spD">–</strong></div><div><span data-t="png"></span><strong id="spP">–</strong></div></div></section>
+</div>
+
+<h2 class="sec" style="margin-top:44px" data-t="art"></h2>
+<div class="grid">
+<article class="tool"><h3 data-t="a1t"></h3><p style="color:var(--mut);margin:0 0 12px" data-t="a1p"></p><a href="#" data-t="read" style="font-weight:600;color:var(--blue)"></a></article>
+<article class="tool"><h3 data-t="a2t"></h3><p style="color:var(--mut);margin:0 0 12px" data-t="a2p"></p><a href="#" data-t="read" style="font-weight:600;color:var(--blue)"></a></article>
+<article class="tool"><h3 data-t="a3t"></h3><p style="color:var(--mut);margin:0 0 12px" data-t="a3p"></p><a href="#" data-t="read" style="font-weight:600;color:var(--blue)"></a></article>
+</div>
+
+<footer><span data-t="priv"></span><span data-t="credit"></span><nav><a href="#" data-t="about"></a><a href="#" data-t="pp"></a><a href="#" data-t="contact"></a></nav></footer>
+</div>
+
+<script>
+const T={
+en:{s1h:"Loan calculator",s1p:"See your monthly payment before you sign.",s2h:"Percentage calculator",s2p:"Discounts, tips and changes in two taps.",s3h:"Word counter",s3p:"Words, characters and reading time as you type.",open:"Open tool",all:"All tools",amt:"Loan amount",rate:"Annual rate (%)",term:"Term (years)",mon:"Monthly payment",int:"Total interest",what:"What is",of:"% of",res:"Result",ph:"Type or paste your text",w:"Words",c:"Characters",rt:"Reading time (min)",priv:"Your data stays in your browser.",about:"About",pp:"Privacy",contact:"Contact",art:"Latest articles",read:"Read article",a1t:"How to calculate your monthly loan payment",a1p:"A simple formula, a worked example, and the mistakes that make loans look cheaper than they are.",a2t:"JPG, PNG or WebP: which image format should you use?",a2p:"What each format is good at, and how to cut file size without visible quality loss.",a3t:"What is a good internet speed for working from home?",a3p:"Mbps explained, what video calls really need, and how to test your connection properly.",credit:"Made by Team Liam",s4p:"Switch between JPG, PNG and WebP without leaving your browser.",s5p:"Check your download speed and latency in seconds.",imgh:"Image converter",imgin:"Choose an image",fmt:"Format",qual:"Quality",conv:"Convert",dl:"Download",sz:"File size",spd:"Internet speed test",go:"Start test",dlm:"Download (Mbps)",png:"Latency (ms)",err:"The test needs a live connection to the test server.",loc:"en-US"},
+fr:{s1h:"Calculateur de prêt",s1p:"Connaissez votre mensualité avant de signer.",s2h:"Calculateur de pourcentage",s2p:"Remises, pourboires et variations en deux gestes.",s3h:"Compteur de mots",s3p:"Mots, caractères et temps de lecture en direct.",open:"Ouvrir l’outil",all:"Tous les outils",amt:"Montant du prêt",rate:"Taux annuel (%)",term:"Durée (ans)",mon:"Mensualité",int:"Intérêts totaux",what:"Combien font",of:"% de",res:"Résultat",ph:"Saisissez ou collez votre texte",w:"Mots",c:"Caractères",rt:"Temps de lecture (min)",priv:"Vos données restent dans votre navigateur.",about:"À propos",pp:"Confidentialité",contact:"Contact",art:"Derniers articles",read:"Lire l’article",a1t:"Comment calculer sa mensualité de prêt",a1p:"Une formule simple, un exemple chiffré et les erreurs qui font paraître un prêt moins cher qu’il ne l’est.",a2t:"JPG, PNG ou WebP : quel format d’image choisir ?",a2p:"Les points forts de chaque format et comment alléger un fichier sans perte visible.",a3t:"Quel débit internet pour télétravailler ?",a3p:"Les Mb/s expliqués, ce dont les visioconférences ont vraiment besoin et comment tester sa connexion.",credit:"Réalisé par l’équipe Liam",s4p:"Passez de JPG à PNG ou WebP sans quitter votre navigateur.",s5p:"Mesurez votre débit et votre latence en quelques secondes.",imgh:"Convertisseur d’images",imgin:"Choisir une image",fmt:"Format",qual:"Qualité",conv:"Convertir",dl:"Télécharger",sz:"Taille du fichier",spd:"Test de débit internet",go:"Lancer le test",dlm:"Téléchargement (Mb/s)",png:"Latence (ms)",err:"Le test nécessite une connexion au serveur de test.",loc:"fr-FR"},
+de:{s1h:"Kreditrechner",s1p:"Ihre monatliche Rate, bevor Sie unterschreiben.",s2h:"Prozentrechner",s2p:"Rabatte, Trinkgeld und Veränderungen in Sekunden.",s3h:"Wortzähler",s3p:"Wörter, Zeichen und Lesezeit, während Sie tippen.",open:"Tool öffnen",all:"Alle Tools",amt:"Kreditbetrag",rate:"Jahreszins (%)",term:"Laufzeit (Jahre)",mon:"Monatliche Rate",int:"Gesamtzinsen",what:"Wie viel sind",of:"% von",res:"Ergebnis",ph:"Text eingeben oder einfügen",w:"Wörter",c:"Zeichen",rt:"Lesezeit (Min.)",priv:"Ihre Daten bleiben in Ihrem Browser.",about:"Über uns",pp:"Datenschutz",contact:"Kontakt",art:"Neueste Artikel",read:"Artikel lesen",a1t:"So berechnen Sie Ihre monatliche Kreditrate",a1p:"Eine einfache Formel, ein Rechenbeispiel und die Fehler, die Kredite günstiger aussehen lassen, als sie sind.",a2t:"JPG, PNG oder WebP: Welches Bildformat passt?",a2p:"Wofür sich jedes Format eignet und wie Sie Dateien ohne sichtbaren Qualitätsverlust verkleinern.",a3t:"Welche Internetgeschwindigkeit braucht das Homeoffice?",a3p:"Mbit/s erklärt, was Videocalls wirklich brauchen und wie Sie Ihre Verbindung richtig testen.",credit:"Ein Werk von Team Liam",s4p:"Wechseln Sie zwischen JPG, PNG und WebP direkt im Browser.",s5p:"Prüfen Sie Download-Tempo und Latenz in Sekunden.",imgh:"Bildkonverter",imgin:"Bild auswählen",fmt:"Format",qual:"Qualität",conv:"Konvertieren",dl:"Herunterladen",sz:"Dateigröße",spd:"Internet-Speedtest",go:"Test starten",dlm:"Download (Mbit/s)",png:"Latenz (ms)",err:"Der Test benötigt eine Verbindung zum Testserver.",loc:"de-DE"}
+};
+let L="en";const $=i=>document.getElementById(i);
+function calc(){
+const nf=(v,o)=>new Intl.NumberFormat(T[L].loc,o).format(v);
+const a=+$("la").value||0,r=(+$("lr").value||0)/1200,n=Math.max(1,(+$("ly").value||1)*12);
+const m=r?a*r/(1-Math.pow(1+r,-n)):a/n;
+const cur={style:"decimal",maximumFractionDigits:2,minimumFractionDigits:2};
+$("lm").textContent=nf(m,cur);$("li").textContent=nf(m*n-a,cur);
+$("pr").textContent=nf((+$("pa").value||0)*(+$("pb").value||0)/100,{maximumFractionDigits:4});
+const t=$("wt").value.trim(),w=t?t.split(/\s+/).length:0;
+$("ww").textContent=nf(w);$("wc").textContent=nf($("wt").value.length);$("wr").textContent=nf(Math.max(w?1:0,Math.ceil(w/220)));
+}
+function setLang(l){L=l;document.documentElement.lang=l;
+document.querySelectorAll("[data-t]").forEach(e=>e.textContent=T[l][e.dataset.t]);
+$("lang").value=l;
+document.title="Kitbly – "+T[l].all;calc()}
+$("lang").onchange=e=>setLang(e.target.value);
+["la","lr","ly","pa","pb","wt"].forEach(i=>$(i).addEventListener("input",calc));
+let blobUrl;
+$("imgGo").onclick=()=>{const f=$("imgF").files[0];if(!f)return;const fm=$("imgFmt").value,q=+$("imgQ").value/100,im=new Image();
+im.onload=()=>{const c=document.createElement("canvas");c.width=im.width;c.height=im.height;const x=c.getContext("2d");if(fm==="image/jpeg"){x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height)}x.drawImage(im,0,0);
+c.toBlob(b=>{if(blobUrl)URL.revokeObjectURL(blobUrl);blobUrl=URL.createObjectURL(b);const a=$("imgDl");a.href=blobUrl;a.download=f.name.replace(/\.[^.]+$/,"")+"."+fm.split("/")[1].replace("jpeg","jpg");a.hidden=false;$("imgSz").textContent=(f.size/1024).toFixed(0)+" KB → "+(b.size/1024).toFixed(0)+" KB"},fm,q);URL.revokeObjectURL(im.src)};im.src=URL.createObjectURL(f)};
+$("spGo").onclick=async()=>{const nf=v=>new Intl.NumberFormat(T[L].loc,{maximumFractionDigits:1}).format(v);$("spGo").disabled=true;$("spErr").textContent="";
+try{let t=performance.now();await fetch("https://speed.cloudflare.com/__down?bytes=0",{cache:"no-store"});$("spP").textContent=nf(performance.now()-t);
+t=performance.now();const r=await fetch("https://speed.cloudflare.com/__down?bytes=15000000",{cache:"no-store"}),b=await r.arrayBuffer();$("spD").textContent=nf(b.byteLength*8/1e6/((performance.now()-t)/1000))}catch(e){$("spErr").textContent=T[L].err}$("spGo").disabled=false};
+/* slider */
+const tr=$("track"),N=5,dots=$("dots");let i=0,timer;
+for(let k=0;k<N;k++){const b=document.createElement("button");b.setAttribute("aria-label","Slide "+(k+1));b.onclick=()=>go(k,true);dots.appendChild(b)}
+function go(k,user){i=(k+N)%N;tr.style.transform="translateX("+(-100*i)+"%)";
+[...dots.children].forEach((d,j)=>d.setAttribute("aria-current",j===i));if(user)restart()}
+function restart(){clearInterval(timer);if(!matchMedia("(prefers-reduced-motion:reduce)").matches)timer=setInterval(()=>go(i+1),5500)}
+$("next").onclick=()=>go(i+1,true);$("prev").onclick=()=>go(i-1,true);
+const sl=document.querySelector(".slider");sl.onmouseenter=()=>clearInterval(timer);sl.onmouseleave=restart;
+let x0=null;tr.addEventListener("touchstart",e=>{x0=e.touches[0].clientX},{passive:true});
+tr.addEventListener("touchend",e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;if(Math.abs(d)>40)go(i+(d<0?1:-1),true);x0=null});
+go(0);restart();const nl=(navigator.language||"en").slice(0,2);setLang(T[nl]?nl:"en");
+</script>
+</body>
+</html>
